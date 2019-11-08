@@ -16,6 +16,19 @@ type Credentials struct {
 	AccessTokenSecret string
 }
 
+//SearchResponse is response object for search tweet
+type SearchResponse struct {
+	Status   int
+	Text     string
+	FullText string
+}
+
+//SendTweetResponse is response for sending tweet
+type SendTweetResponse struct {
+	Status int
+	ID     int64
+}
+
 func getClient(creds *Credentials) (*twitter.Client, error) {
 	config := oauth1.NewConfig(creds.ConsumerKey, creds.ConsumerSecret)
 	token := oauth1.NewToken(creds.AccessToken, creds.AccessTokenSecret)
@@ -41,7 +54,9 @@ func getCredentials() Credentials {
 		ConsumerSecret:    "texBxnSkmddS0a32iQLXmLttVJkXnrfmiB5YlmXg8BPcMUjChb",
 	}
 }
-func sendTweet() string {
+
+//SendTweet function sends tweet for authenticated user
+func SendTweet() (SendTweetResponse, error) {
 	creds := getCredentials()
 	var clnt, err = getClient(&creds)
 	if err != nil {
@@ -50,19 +65,16 @@ func sendTweet() string {
 	tweet, resp, err := clnt.Statuses.Update("this is another test tweet", nil)
 	if err != nil {
 		log.Println(err)
-		//return string(err.Error)
+		return SendTweetResponse{Status: resp.StatusCode}, err
 	}
-	if resp.StatusCode == 200 {
-		return "success"
-	}
-
-	fmt.Println("%+v\n", resp)
-	fmt.Println("%+v\n", tweet)
-
-	return "error sending tweet"
+	return SendTweetResponse{
+		ID:     tweet.ID,
+		Status: resp.StatusCode,
+	}, nil
 }
 
-func SearchTweet() string {
+//SearchTweet searches a tweet or hashtag
+func SearchTweet() SearchResponse {
 	creds := getCredentials()
 	var clnt, err = getClient(&creds)
 	if err != nil {
@@ -78,10 +90,17 @@ func SearchTweet() string {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println("resp: ", resp.StatusCode)
-	fmt.Println(search.Statuses[1].Text)
-	fmt.Println(search.Statuses[1].FullText)
-	return resp.Status
+	var searchResponse = SearchResponse{
+		FullText: search.Statuses[0].FullText,
+		Status:   resp.StatusCode,
+		Text:     search.Statuses[0].Text,
+	}
+	return searchResponse
+
+	// fmt.Println("resp: ", resp.StatusCode)
+	// fmt.Println(search.Statuses[0].Text)
+	// fmt.Println(search.Statuses[0].FullText)
+	// return resp.Status
 }
 func main() {
 	fmt.Println("test bot")
