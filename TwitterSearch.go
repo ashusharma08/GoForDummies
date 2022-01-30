@@ -48,10 +48,10 @@ func getClient(creds *Credentials) (*twitter.Client, error) {
 }
 func getCredentials() Credentials {
 	return Credentials{
-		AccessToken:       "125277653-iwDs38SZcAwYVQI76zn3O1MAHDesk0shEgSFvzKZ",
-		AccessTokenSecret: "lgRCdt5ftq5xrZq3CvKjsYhkPglkkW9sXD2Le2tnZXNpF",
-		ConsumerKey:       "xpedwliEFGhYQKNZFtG6Mm7BR",
-		ConsumerSecret:    "texBxnSkmddS0a32iQLXmLttVJkXnrfmiB5YlmXg8BPcMUjChb",
+		AccessToken:       "",
+		AccessTokenSecret: "",
+		ConsumerKey:       "",
+		ConsumerSecret:    "",
 	}
 }
 
